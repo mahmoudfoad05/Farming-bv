@@ -4,7 +4,8 @@ Minimal, secure-by-default setup to host a single static page that serves Farmin
 
 ## 🧱 Block Diagram
 
-```flowchart LR
+```mermaid
+flowchart LR
   User((User Browser)) -->|"HTTPS 443 / HTTP 80 → 301 Redirect"| SG[Security Group]
   subgraph AWS
     SG --> EC2[EC2: Amazon Linux 2023<br/>Nginx + TLS<br/>Fail2ban + Auto Updates]

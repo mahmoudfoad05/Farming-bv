@@ -71,6 +71,14 @@
     group: nginx
     mode: '0644'
 
+- name: Copy Farming BV logo
+  ansible.builtin.copy:
+    src: farming_BV_logo.png
+    dest: "{{ site_root }}/assets/farming_BV_logo.png"
+    owner: nginx
+    group: nginx
+    mode: '0644'
+
 - name: Ensure SELinux contexts/users (Amazon Linux doesn't enforce by default) and permissions
   ansible.builtin.file:
     path: "{{ site_root }}"

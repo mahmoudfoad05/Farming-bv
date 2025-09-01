@@ -84,13 +84,6 @@ farming-bv-secure-logo/
                 └── site.conf.j2
 ```
 
-## 🧪 Demo Checklist
-- ✅ URL reachable over HTTPS (self-signed or real cert)
-- ✅ Architecture overview (diagram above)
-- ✅ Codebase (Terraform + Ansible)
-- ✅ Threats & mitigations explained in README & during demo
-- ✅ Bonus: automation, least privilege, headers, auto-updates, fail2ban
-
 ## 📄 Notes
 - Instance user: `ec2-user` (Amazon Linux 2023)
 - Nginx serves from `/var/www/farming-bv`

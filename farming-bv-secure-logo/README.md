@@ -87,5 +87,5 @@ farming-bv-secure-logo/
 ## 📄 Notes
 - Instance user: `ec2-user` (Amazon Linux 2023)
 - Nginx serves from `/var/www/farming-bv`
-- Replace the placeholder logo at `ansible/roles/nginx/templates/logo.svg.j2` with the real logo when available.
+- Replace the placeholder logo at `ansible/roles/nginx/templates/logo.svg.j2` with the real logo.
 ```

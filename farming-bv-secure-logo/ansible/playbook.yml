@@ -1,0 +1,12 @@
+- name: Harden host and deploy secure nginx for Farming BV logo
+  hosts: web
+  become: true
+  vars:
+    domain_name: ""
+    use_self_signed: true
+    tls_cert_path: /etc/nginx/tls/server.crt
+    tls_key_path: /etc/nginx/tls/server.key
+    site_root: /var/www/farming-bv
+  roles:
+    - role: common
+    - role: nginx

@@ -1,0 +1,40 @@
+- name: Ensure system is up to date
+  ansible.builtin.dnf:
+    name: "*"
+    state: latest
+    update_only: true
+
+- name: Install baseline packages
+  ansible.builtin.dnf:
+    name:
+      - fail2ban
+      - dnf-automatic
+    state: present
+
+- name: Enable unattended security updates
+  ansible.builtin.lineinfile:
+    path: /etc/dnf/automatic.conf
+    regexp: '^apply_updates ='
+    line: 'apply_updates = yes'
+
+- name: Ensure timers for dnf-automatic are enabled
+  ansible.builtin.systemd:
+    name: dnf-automatic.timer
+    enabled: true
+    state: started
+
+- name: Configure fail2ban with sane defaults
+  ansible.builtin.copy:
+    dest: /etc/fail2ban/jail.d/sshd.local
+    content: |
+      [sshd]
+      enabled = true
+      bantime = 3600
+      maxretry = 5
+  notify: Restart fail2ban
+
+- name: Ensure fail2ban is enabled and running
+  ansible.builtin.systemd:
+    name: fail2ban
+    enabled: true
+    state: started

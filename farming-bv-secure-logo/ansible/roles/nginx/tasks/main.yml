@@ -1,0 +1,86 @@
+- name: Install nginx and openssl
+  ansible.builtin.dnf:
+    name:
+      - nginx
+      - openssl
+    state: present
+
+- name: Create directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - /etc/nginx/tls
+    - "{{ site_root }}/assets"
+
+- name: Generate self-signed TLS cert (if requested)
+  ansible.builtin.command:
+    argv:
+      - openssl
+      - req
+      - -x509
+      - -nodes
+      - -days
+      - "365"
+      - -newkey
+      - rsa:2048
+      - -keyout
+      - "{{ tls_key_path }}"
+      - -out
+      - "{{ tls_cert_path }}"
+      - -subj
+      - "/CN={{ domain_name | default('localhost') }}"
+  args:
+    creates: "{{ tls_cert_path }}"
+  when: use_self_signed | bool
+
+- name: Deploy nginx config
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart nginx
+
+- name: Deploy site config
+  ansible.builtin.template:
+    src: site.conf.j2
+    dest: /etc/nginx/conf.d/site.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart nginx
+
+- name: Deploy site index
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "{{ site_root }}/index.html"
+    owner: nginx
+    group: nginx
+    mode: '0644'
+
+- name: Deploy placeholder Farming BV logo (SVG)
+  ansible.builtin.template:
+    src: logo.svg.j2
+    dest: "{{ site_root }}/assets/logo.svg"
+    owner: nginx
+    group: nginx
+    mode: '0644'
+
+- name: Ensure SELinux contexts/users (Amazon Linux doesn't enforce by default) and permissions
+  ansible.builtin.file:
+    path: "{{ site_root }}"
+    owner: nginx
+    group: nginx
+    mode: '0755'
+    state: directory
+
+- name: Enable and start nginx
+  ansible.builtin.systemd:
+    name: nginx
+    enabled: true
+    state: started

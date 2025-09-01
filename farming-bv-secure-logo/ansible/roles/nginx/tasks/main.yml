@@ -63,14 +63,6 @@
     group: nginx
     mode: '0644'
 
-- name: Deploy placeholder Farming BV logo (SVG)
-  ansible.builtin.template:
-    src: logo.svg.j2
-    dest: "{{ site_root }}/assets/logo.svg"
-    owner: nginx
-    group: nginx
-    mode: '0644'
-
 - name: Copy Farming BV logo
   ansible.builtin.copy:
     src: farming_BV_logo.png

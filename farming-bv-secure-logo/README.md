@@ -4,13 +4,13 @@ Minimal, secure-by-default setup to host a single static page that serves Farmin
 
 ## 🧱 Block Diagram
 
-```mermaid
-flowchart LR
-  User((User Browser)) -->|HTTPS 443 / HTTP 80 (301)| SG[Security Group]
+```flowchart LR
+  User((User Browser)) -->|"HTTPS 443 / HTTP 80 → 301 Redirect"| SG[Security Group]
   subgraph AWS
-    SG --> EC2[EC2: Amazon Linux 2023\nNginx + TLS\nFail2ban + Auto Updates]
-    EC2 -->|Serve static assets| NGINX[Nginx]
+    SG --> EC2[EC2: Amazon Linux 2023<br/>Nginx + TLS<br/>Fail2ban + Auto Updates]
+    EC2 -->|"Serve static logo"| NGINX[Nginx Web Server]
   end
+
   classDef aws fill:#232f3e,stroke:#111,color:#fff;
   class EC2,SG aws;
 ```
